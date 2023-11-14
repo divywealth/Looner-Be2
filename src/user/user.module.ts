@@ -4,6 +4,7 @@ import { UserController } from './user.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
+import { Verification, VerificationSchema } from 'src/verification/entities/verification.entity';
 
 @Module({
   imports: [

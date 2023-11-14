@@ -7,17 +7,17 @@ import * as mongoose from 'mongoose';
 export class UserService {
   constructor(
     @InjectModel(User.name)
-    private bookModel: mongoose.Model<User>,
+    private userModel: mongoose.Model<User>,
   ) {}
 
   async findAll() {
-    const users = await this.bookModel.find();
+    const users = await this.userModel.find();
     return users;
   }
 
   async findOne(id: string) {
     try {
-      const user = await this.bookModel.findById(id);
+      const user = await this.userModel.findById(id);
     return user
     } catch (error) {
       throw error

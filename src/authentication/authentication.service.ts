@@ -1,4 +1,7 @@
-import { ResetPasswordDto } from './dto/reset-password.dto';
+import * as SendGrid from '@sendgrid/mail';
+import { Verification } from 'src/verification/entities/verification.entity';
+import { randomNumber } from './../Services/randomNumber';
+import { ResetPasswordDto, VerifyPasswordCodeDto } from './dto/reset-password.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
@@ -11,14 +14,21 @@ import { BadRequest } from 'src/Services/BadRequestResponse';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UpdatePassworDto } from './dto/update-password.dto';
+import { VerificationService } from 'src/verification/verification.service';
+import { CreateVerificationDto } from 'src/verification/dto/create-verification.dto';
+import { NotificationService } from 'src/Services/NotificationService';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     private cloudinaryService: CloudinaryService,
     @InjectModel(User.name)
-    private userModel: mongoose.Model<User>,
+    private readonly userModel: mongoose.Model<User>,
+    @InjectModel(Verification.name)
+    private readonly verificationModel: mongoose.Model<Verification>,
     private jwtService: JwtService,
+    private readonly verificationService: VerificationService,
+    private notificationService: NotificationService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -91,23 +101,45 @@ export class AuthenticationService {
   async sendResetPasswordCode(email: string) {
     try {
       const existingUser = await this.userModel.findOne({
-        where: {
-          email: email,
-        },
+        email: email,
       });
       if (!existingUser) {
         return BadRequest('No user with this email exist');
       }
+      const existingVerificationCode = await this.verificationModel.findOne({
+        userId: existingUser._id,
+      });
+      if (existingVerificationCode) {
+        const deleteVerification =
+          await this.verificationService.removeUserVerification(existingUser);
+      }
+      const verificationCode = randomNumber(6);
+      const createVerificationCode = await this.verificationService.create(
+        existingUser,
+        verificationCode,
+      );
+
+      //payload to send to email
+      const emailPayload: SendGrid.MailDataRequired = {
+        to: email,
+        subject: 'Looner Reset Password',
+        from: 'christianonuora1@gmail.com',
+        text: 'Hello world from NestJs Sendgrid',
+        html: `<h1>Hello ${existingUser.firstname} your verification code is ${verificationCode}</h1>`,
+      };
+      await this.notificationService.emailNotificationService(emailPayload);
+      const message = `passcode has been sent to ${email}`;
+      return message;
     } catch (error) {
       throw error.message;
     }
   }
 
-  async verifyResetPasswordCode() {
+  async verifyResetPasswordCode(verifyPasswordCodeDto: VerifyPasswordCodeDto) {
     try {
-      
+      const existingCode = await this.verificationModel.findOne({});
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
@@ -127,30 +159,40 @@ export class AuthenticationService {
         saltOrRounds,
       );
       const filter = {
-        email: resetPasswordDto.email
-      }
-      return await this.userModel.findOneAndUpdate(filter, {password: password})
+        email: resetPasswordDto.email,
+      };
+      return await this.userModel.findOneAndUpdate(filter, {
+        password: password,
+      });
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
   async updatePassword(updatePasswordDto: UpdatePassworDto, user: User) {
     try {
-      if (!(await bcrypt.compare(updatePasswordDto.currentpassword, user.password))) {
-        return BadRequest('Current password not correct')
+      if (
+        !(await bcrypt.compare(
+          updatePasswordDto.currentpassword,
+          user.password,
+        ))
+      ) {
+        return BadRequest('Current password not correct');
       }
       const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(updatePasswordDto.newpassword, saltRounds);
+      const hashedPassword = await bcrypt.hash(
+        updatePasswordDto.newpassword,
+        saltRounds,
+      );
       const filter = {
-        email: user.email
-      }
+        email: user.email,
+      };
       const updatePassword = {
-        password: hashedPassword
-      }
-      return this.userModel.findOneAndUpdate(filter, updatePassword)
+        password: hashedPassword,
+      };
+      return this.userModel.findOneAndUpdate(filter, updatePassword);
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
@@ -177,8 +219,8 @@ export class AuthenticationService {
   async remove(id: string) {
     try {
       const filter = {
-        _id: id
-      }
+        _id: id,
+      };
       return this.userModel.findOneAndDelete(filter);
     } catch (error) {
       throw error;

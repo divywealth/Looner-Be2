@@ -1,26 +1,59 @@
 import { Injectable } from '@nestjs/common';
 import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Image } from './entities/image.entity';
+import mongoose from 'mongoose';
+import { Post } from 'src/post/entities/post.entity';
 
 @Injectable()
 export class ImageService {
-  create(createImageDto: CreateImageDto) {
-    return 'This action adds a new image';
+
+  constructor(
+    @InjectModel(Image.name)
+    private readonly imageModel: mongoose.Model<Image>
+  ) {}
+
+  create(image: string, postId: string) {
+    try {
+      return this.imageModel.create({
+        image: image,
+        postId: postId
+      })
+    } catch (error) {
+      throw error
+    }
   }
 
   findAll() {
-    return `This action returns all image`;
+    try {
+
+    } catch (error) {
+      throw error
+    }
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} image`;
+    try {
+
+    } catch (error) {
+      throw error
+    }
   }
 
   update(id: number, updateImageDto: UpdateImageDto) {
-    return `This action updates a #${id} image`;
+    try {
+
+    } catch (error) {
+      throw error
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} image`;
+    try {
+
+    } catch (error) {
+      throw error
+    }
   }
 }

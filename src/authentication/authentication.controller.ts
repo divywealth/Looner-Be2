@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { UserService } from 'src/user/user.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { VerifyPasswordCodeDto } from './dto/reset-password.dto';
 
 @Controller({
   version: '1'
@@ -51,6 +52,24 @@ export class AuthenticationController {
   loginUser(@Body() loginUserDto: LoginUserDto) {
     try {
       return this.authenticationService.loginUser(loginUserDto);
+    } catch (error) {
+      throw error.message
+    }
+  }
+
+  @Post('forgetpassword')
+  sendResetPasswordCode(@Body() verifyPasswordCodeDto: VerifyPasswordCodeDto) {
+    try {
+      return this.authenticationService.sendResetPasswordCode(verifyPasswordCodeDto.email)
+    } catch (err) {
+      throw err.message
+    }
+  }
+
+  @Post('verifypasscode')
+  verifyPasswordCode(@Body() verifyPasswordCodeDto: VerifyPasswordCodeDto) {
+    try {
+      return this.authenticationService.verifyResetPasswordCode(verifyPasswordCodeDto)
     } catch (error) {
       throw error.message
     }

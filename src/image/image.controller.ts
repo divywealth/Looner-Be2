@@ -7,10 +7,10 @@ import { UpdateImageDto } from './dto/update-image.dto';
 export class ImageController {
   constructor(private readonly imageService: ImageService) {}
 
-  @Post()
-  create(@Body() createImageDto: CreateImageDto) {
-    return this.imageService.create(createImageDto);
-  }
+  // @Post()
+  // create(@Body() createImageDto: CreateImageDto) {
+  //   return this.imageService.create(createImageDto);
+  // }
 
   @Get()
   findAll() {

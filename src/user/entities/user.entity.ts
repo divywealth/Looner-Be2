@@ -1,10 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Post } from 'src/post/entities/post.entity';
+import { Verification } from 'src/verification/entities/verification.entity';
 
 export type UserDocument = HydratedDocument<User>
 
 @Schema()
 export class User {
+  _id: string
+
   @Prop({required: true})
   firstname: string;
 
@@ -28,6 +32,18 @@ export class User {
 
   @Prop({required: true})
   password: string;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post'
+  })
+  post: Post[]
+
+  @Prop({ default: Date.now })
+  createdAt!: Date;
+
+  @Prop({ default: Date.now })
+  updatedAt!: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

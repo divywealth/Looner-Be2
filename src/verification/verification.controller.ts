@@ -7,10 +7,10 @@ import { UpdateVerificationDto } from './dto/update-verification.dto';
 export class VerificationController {
   constructor(private readonly verificationService: VerificationService) {}
 
-  @Post()
-  create(@Body() createVerificationDto: CreateVerificationDto) {
-    return this.verificationService.create(createVerificationDto);
-  }
+  //@Post()
+  //create(@Body() createVerificationDto: CreateVerificationDto) {
+    //return this.verificationService.create(createVerificationDto);
+  //}
 
   @Get()
   findAll() {
@@ -19,7 +19,7 @@ export class VerificationController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.verificationService.findOne(+id);
+    return this.verificationService.findOne(id);
   }
 
   @Patch(':id')
