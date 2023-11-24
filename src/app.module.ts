@@ -7,6 +7,8 @@ import { PostModule } from './post/post.module';
 import { ImageModule } from './image/image.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { VerificationModule } from './verification/verification.module';
+import { PostCommentModule } from './post-comment/post-comment.module';
+import { PostLikeModule } from './post-like/post-like.module';
 
 
 @Module({
@@ -21,7 +23,9 @@ import { VerificationModule } from './verification/verification.module';
     PostModule,
     ImageModule,
     CloudinaryModule,
-    VerificationModule
+    VerificationModule,
+    PostCommentModule,
+    PostLikeModule
   ],
   controllers: [],
   providers: [],

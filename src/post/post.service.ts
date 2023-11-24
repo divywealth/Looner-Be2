@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Post } from './entities/post.entity';
 import { ImageService } from 'src/image/image.service';
+import { Image } from 'src/image/entities/image.entity';
 
 @Injectable()
 export class PostService {
@@ -20,17 +21,28 @@ export class PostService {
   async create(createPostDto: CreatePostDto, userId: string) {
     try {
       let files: any = []
-      console.log(createPostDto.file, createPostDto.file.length)
-      for (let i = 0; i < createPostDto.file.length; i++) {
-        const upload = await this.cloudinaryService.uploadImage(createPostDto.file[i])
-        files.push(upload.url)
-      }
-      const post = await this.postModel.create({
-        text: createPostDto.text,
-        userId: userId
-      })
-      for(let i = 0; i < files.length; i++) {
-        const image = await this.imageService.create(files[i], post._id);
+      console.log(createPostDto.file)
+      if (createPostDto.file !== undefined) {
+        console.log(createPostDto.file, createPostDto.file.length)
+        for (let i = 0; i < createPostDto.file.length; i++) {
+          const upload = await this.cloudinaryService.uploadImage(createPostDto.file[i])
+          files.push(upload.url)
+        }
+       
+        const post = await this.postModel.create({
+          text: createPostDto.text,
+          userId: userId,
+        })
+        for(let i = 0; i < files.length; i++) {
+          const image = await this.imageService.create(files[i], post._id);
+        } 
+        return post
+      }else {
+        const createdpost = new this.postModel({
+          text: createPostDto.text,
+          userId: userId, 
+        })
+        return createdpost.save()
       }
     } catch (error) {
       throw error
@@ -39,7 +51,7 @@ export class PostService {
 
   findAll() {
     try {
-      return this.postModel.find().populate('userId')
+      return this.postModel.find().populate('imageId').exec()
     } catch (error) {
       throw error
     }
@@ -47,7 +59,7 @@ export class PostService {
 
   findOne(id: string) {
     try {
-      return this.postModel.findById(id)
+      return this.postModel.findById(id).populate('imageId').exec()
     } catch (error) {
       throw error
     }

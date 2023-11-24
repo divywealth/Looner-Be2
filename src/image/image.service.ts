@@ -16,10 +16,11 @@ export class ImageService {
 
   create(image: string, postId: string) {
     try {
-      return this.imageModel.create({
+      const createdImage = new this.imageModel({
         image: image,
         postId: postId
       })
+      return createdImage.save()
     } catch (error) {
       throw error
     }
@@ -27,7 +28,7 @@ export class ImageService {
 
   findAll() {
     try {
-
+      return this.imageModel.find()
     } catch (error) {
       throw error
     }

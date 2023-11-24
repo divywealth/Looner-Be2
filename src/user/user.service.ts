@@ -11,15 +11,17 @@ export class UserService {
   ) {}
 
   async findAll() {
-    const users = await this.userModel.find();
+    const users = await this.userModel.find().populate('posts').exec();
     return users;
   }
 
   async findOne(id: string) {
     try {
-      const user = await this.userModel.findById(id);
+      const user = await this.userModel.findById(id).populate('posts').exec();
+      console.log(user.posts)
     return user
     } catch (error) {
+      console.error(error)
       throw error
     }
   }

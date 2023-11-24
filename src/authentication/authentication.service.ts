@@ -61,10 +61,12 @@ export class AuthenticationService {
         dob: createUserDto.dob,
         password: hashedPassword,
       };
-      const createdUser = await this.userModel.create(information2Save);
+      const createdUserOne = new this.userModel(information2Save)
+      const createdUserTwo = await createdUserOne.save()
+      console.log(createdUserTwo)
       return {
-        user: createdUser,
-        access_token: await this.jwtService.signAsync({ user: createdUser }),
+        user: createdUserTwo,
+        access_token: await this.jwtService.signAsync({ user: createdUserTwo }),
       };
     } catch (error) {
       throw error;
@@ -118,20 +120,19 @@ export class AuthenticationService {
         existingUser,
         verificationCode,
       );
-
       //payload to send to email
-      const emailPayload: SendGrid.MailDataRequired = {
-        to: email,
-        subject: 'Looner Reset Password',
-        from: 'christianonuora1@gmail.com',
-        text: 'Hello world from NestJs Sendgrid',
-        html: `<h1>Hello ${existingUser.firstname} your verification code is ${verificationCode}</h1>`,
-      };
-      await this.notificationService.emailNotificationService(emailPayload);
-      const message = `passcode has been sent to ${email}`;
-      return message;
+     const emailPayload: SendGrid.MailDataRequired = {
+       to: email,
+       subject: 'Looner Reset Password',
+       from: 'christianonuora1@gmail.com',
+       text: 'Hello world from NestJs Sendgrid',
+       html: `<h1>Hello ${existingUser.firstname} your verification code is ${verificationCode}</h1>`,
+     };
+     await this.notificationService.emailNotificationService(emailPayload);
+     const message = `passcode has been sent to ${email}`;
+     return message;
     } catch (error) {
-      throw error.message;
+      throw error;
     }
   }
 

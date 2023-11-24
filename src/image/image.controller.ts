@@ -3,7 +3,9 @@ import { ImageService } from './image.service';
 import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
 
-@Controller('image')
+@Controller({
+  version: '1'
+})
 export class ImageController {
   constructor(private readonly imageService: ImageService) {}
 
@@ -12,7 +14,7 @@ export class ImageController {
   //   return this.imageService.create(createImageDto);
   // }
 
-  @Get()
+  @Get('images')
   findAll() {
     return this.imageService.findAll();
   }

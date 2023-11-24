@@ -9,6 +9,7 @@ export class NotificationService {
   }
   async emailNotificationService(mail: SendGrid.MailDataRequired) {
     try {
+      console.log(this.configService.get<string>('SEND_GRID_KEY'))
       const sendEmail = await SendGrid.send(mail);
       return sendEmail;
     } catch (error) {
