@@ -38,7 +38,7 @@ export class PostCommentController {
   @Get('post-comment/:id')
   findOne(@Param('id') id: string) {
     try {
-      return this.postCommentService.findOne(+id);
+      return this.postCommentService.findOne(id);
     } catch (error) {
       throw error.message
     }

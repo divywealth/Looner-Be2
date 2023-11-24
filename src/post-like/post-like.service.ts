@@ -10,12 +10,16 @@ export class PostLikeService {
 
   constructor(
     @InjectModel(PostLike.name)
-    private readonly postCommentModel: mongoose.Model<PostLike>
+    private readonly postLikeModel: mongoose.Model<PostLike>
   ) {}
 
   create(createPostLikeDto: CreatePostLikeDto, userId: string): Promise<PostLike> {
     try {
-      
+      const createdPostLike = new this.postLikeModel({
+        userId: userId,
+        createPostLikeDto
+      })
+      return createdPostLike.save()
     } catch (error) {
       throw error
     }
@@ -23,15 +27,15 @@ export class PostLikeService {
 
   findAll() {
     try {
-      
+      return this.postLikeModel.find()
     } catch (error) {
       throw error
     }
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     try {
-      
+      return this.postLikeModel.findById(id);
     } catch (error) {
       throw error
     }

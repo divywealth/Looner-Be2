@@ -14,7 +14,11 @@ export class PostCommentService {
 
   create(createPostCommentDto: CreatePostCommentDto, userId: string): Promise<PostComment> {
     try {
-
+      const createdPostComment = new this.postCommentModel({
+        user: userId,
+        createPostCommentDto
+      })
+      return createdPostComment.save()
     } catch (error) {
       throw error
     }
@@ -28,8 +32,9 @@ export class PostCommentService {
     }
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     try {
+      return this.postCommentModel.findById(id)
     } catch (error) {
       throw error
     }

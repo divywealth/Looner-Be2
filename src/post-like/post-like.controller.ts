@@ -53,7 +53,7 @@ export class PostLikeController {
   @Get('post-like/:id')
   findOne(@Param('id') id: string) {
     try {
-      return this.postLikeService.findOne(+id);
+      return this.postLikeService.findOne(id);
     } catch (error) {
       throw error.message;
     }
