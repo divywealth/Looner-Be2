@@ -5,7 +5,7 @@ import { Verification } from 'src/verification/entities/verification.entity';
 import { PostLike } from 'src/post-like/entities/post-like.entity';
 import { PostComment } from 'src/post-comment/entities/post-comment.entity';
 
-export type UserDocument = HydratedDocument<User>;
+export type UserDocument = HydratedDocument<User>
 
 @Schema()
 export class User {
@@ -36,7 +36,7 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post', }] })
+  @Prop({ type: [{ type: 'ObjectId', ref: 'Post', }] })
   posts: Post[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'PostLike', }] })

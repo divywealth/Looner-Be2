@@ -34,7 +34,7 @@ export class PostLikeController {
       const decodedToken = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
-      const userId = decodedToken.user.id;
+      const userId = decodedToken.user._id;
       return this.postLikeService.create(createPostLikeDto, userId);
     } catch (error) {
       throw error.message;

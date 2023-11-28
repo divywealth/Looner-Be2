@@ -5,7 +5,7 @@ import { User } from '../../user/entities/user.entity';
 import { PostLike } from 'src/post-like/entities/post-like.entity';
 import { PostComment } from 'src/post-comment/entities/post-comment.entity';
 
-export type PostDocument = HydratedDocument<Post>;
+export type PostDocument = HydratedDocument<Post>
 
 @Schema()
 export class Post {
@@ -24,7 +24,7 @@ export class Post {
   userId: User;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Image' }] })
-  imageId: Image[];
+  images: Image[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'PostLike' }] })
   postLikes: PostLike[];

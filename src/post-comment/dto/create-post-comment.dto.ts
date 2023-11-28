@@ -2,7 +2,7 @@ import { IsNotEmpty } from "class-validator";
 
 export class CreatePostCommentDto {
     @IsNotEmpty()
-    post: number;
+    postId: string;
 
     @IsNotEmpty()
     comment: string;

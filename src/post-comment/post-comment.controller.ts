@@ -19,7 +19,7 @@ export class PostCommentController {
       const decodedToken = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
-      const userId = decodedToken.user.id;
+      const userId = decodedToken.user._id;
       return this.postCommentService.create(createPostCommentDto, userId);
     } catch (error) {
       throw error.message

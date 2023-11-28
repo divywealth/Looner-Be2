@@ -17,7 +17,7 @@ export class PostLikeService {
     try {
       const createdPostLike = new this.postLikeModel({
         userId: userId,
-        createPostLikeDto
+        postId: createPostLikeDto.postId
       })
       return createdPostLike.save()
     } catch (error) {

@@ -100,7 +100,7 @@ export class AuthenticationService {
     }
   }
 
-  async sendResetPasswordCode(email: string) {
+  async sendResetPasswordCode(email: string): Promise<string> {
     try {
       const existingUser = await this.userModel.findOne({
         email: email,
@@ -144,7 +144,7 @@ export class AuthenticationService {
     }
   }
 
-  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<User | null> {
     try {
       if (!resetPasswordDto.password) {
         return BadRequest('Password is required');

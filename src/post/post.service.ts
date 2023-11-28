@@ -3,7 +3,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Post } from './entities/post.entity';
 import { ImageService } from 'src/image/image.service';
 import { Image } from 'src/image/entities/image.entity';
@@ -13,12 +13,12 @@ export class PostService {
 
   constructor (
     @InjectModel(Post.name)
-    private readonly postModel: mongoose.Model<Post>,
+    private readonly postModel: Model<Post>,
     private readonly cloudinaryService: CloudinaryService,
     private readonly imageService: ImageService
   ) {}
 
-  async create(createPostDto: CreatePostDto, userId: string) {
+  async create(createPostDto: CreatePostDto, userId: string): Promise<Post | null> {
     try {
       let files: any = []
       console.log(createPostDto.file)
@@ -49,23 +49,23 @@ export class PostService {
     }
   }
 
-  findAll() {
+  findAll(): Promise<Post[] | null> {
     try {
-      return this.postModel.find().populate('imageId').exec()
+      return this.postModel.find().populate('images').exec()
     } catch (error) {
       throw error
     }
   }
 
-  findOne(id: string) {
+  findOne(id: string): Promise<Post | null> {
     try {
-      return this.postModel.findById(id).populate('imageId').exec()
+      return this.postModel.findById(id).populate('images').exec()
     } catch (error) {
       throw error
     }
   }
 
-  update(id: string, updatePostDto: UpdatePostDto) {
+  update(id: string, updatePostDto: UpdatePostDto): Promise<Post | null> {
     try {
       return this.postModel.findOneAndUpdate({_id: id}, updatePostDto)
     } catch (error) {
@@ -73,7 +73,7 @@ export class PostService {
     }
   }
 
-  remove(id: string) {
+  remove(id: string): Promise<Post | null> {
     try {
       return this.postModel.findByIdAndDelete(id)
     } catch (error) {
