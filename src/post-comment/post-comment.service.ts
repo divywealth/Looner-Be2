@@ -12,30 +12,30 @@ export class PostCommentService {
     private readonly postCommentModel: mongoose.Model<PostComment>
   ) {}
 
-  create(createPostCommentDto: CreatePostCommentDto, userId: string): Promise<PostComment> {
+  async create(createPostCommentDto: CreatePostCommentDto, userId: string): Promise<PostComment> {
     try {
       const createdPostComment = new this.postCommentModel({
         userId: userId,
         postId: createPostCommentDto.postId,
         comment: createPostCommentDto.comment
-      })
-      return createdPostComment.save()
+      });
+      return await createdPostComment.save();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findAll(): Promise<PostComment[] | null> {
+    try {
+      return await this.postCommentModel.find();
     } catch (error) {
       throw error
     }
   }
 
-  findAll() {
+  async findOne(id: string): Promise<PostComment | null> {
     try {
-      return this.postCommentModel.find();
-    } catch (error) {
-      throw error
-    }
-  }
-
-  findOne(id: string) {
-    try {
-      return this.postCommentModel.findById(id)
+      return await this.postCommentModel.findById(id);
     } catch (error) {
       throw error
     }

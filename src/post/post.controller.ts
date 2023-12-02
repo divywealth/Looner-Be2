@@ -26,7 +26,7 @@ export class PostController {
 
   @Post('post')
   @UsePipes(ValidationPipe)
-  async create(@Body() body, @UploadedFiles() file: Array<Express.Multer.File>, @Req() request: Request ) {
+  async create(@Body() body, @UploadedFiles() file: Array<Express.Multer.File>, @Req() request: Request ){
     try {
       const token = request.headers.authorization.replace('Bearer ', '');
       const decodedToken = await this.jwtService.verifyAsync(token, {
@@ -44,18 +44,18 @@ export class PostController {
   }
 
   @Get('posts')
-  findAll() {
+  async findAll(){
     try {
-      return this.postService.findAll();
+      return await this.postService.findAll();
     } catch (error) {
       throw error.message
     }
   }
 
   @Get('post/:id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     try {
-      return this.postService.findOne(id);
+      return await this.postService.findOne(id);
     } catch (error) {
       throw error.message
     }

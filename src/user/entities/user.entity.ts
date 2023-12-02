@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument, Types } from 'mongoose';
 import { Post } from '../../post/entities/post.entity';
 import { Verification } from 'src/verification/entities/verification.entity';
 import { PostLike } from 'src/post-like/entities/post-like.entity';
@@ -36,7 +36,7 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ type: [{ type: 'ObjectId', ref: 'Post', }] })
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post', }] })
   posts: Post[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'PostLike', }] })

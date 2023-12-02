@@ -12,12 +12,12 @@ export class UserService {
   ) {}
 
   async findAll(): Promise<User[] | null>  {
-    return this.userModel.find().populate('posts').exec();
+    return await this.userModel.find().populate({ path: 'posts', model: 'Post' }).exec();
   }
 
   async findOne(id: string): Promise<User | null> {
     try {
-      return this.userModel.findById(id).populate('posts').exec();
+      return await this.userModel.findById(id).populate({ path: 'posts', model: 'Post' }).exec();
     } catch (error) {
       console.error(error)
       throw error

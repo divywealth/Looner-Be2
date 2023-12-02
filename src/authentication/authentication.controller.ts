@@ -12,6 +12,7 @@ import { Request } from 'express';
 import { UserService } from 'src/user/user.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { VerifyPasswordCodeDto } from './dto/reset-password.dto';
+import { User } from 'src/user/entities/user.entity';
 
 @Controller({
   version: '1'
@@ -58,7 +59,7 @@ export class AuthenticationController {
   }
 
   @Post('forgetpassword')
-  sendResetPasswordCode(@Body() verifyPasswordCodeDto: VerifyPasswordCodeDto) {
+  sendResetPasswordCode(@Body() verifyPasswordCodeDto: VerifyPasswordCodeDto): Promise<string> {
     try {
       return this.authenticationService.sendResetPasswordCode(verifyPasswordCodeDto.email)
     } catch (err) {
@@ -77,7 +78,7 @@ export class AuthenticationController {
 
   @Patch('reset-password')
   @UsePipes(ValidationPipe)
-  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<User | null> {
     try {
       return this.authenticationService.resetPassword(resetPasswordDto)
     } catch (error) {
@@ -87,7 +88,7 @@ export class AuthenticationController {
 
   @Patch('update-password')
   @UsePipes(ValidationPipe)
-  async updatePassword(@Body() updatePasswordDto: UpdatePassworDto, @Req() request: Request) {
+  async updatePassword(@Body() updatePasswordDto: UpdatePassworDto, @Req() request: Request): Promise<User | null> {
     try {
       const token = request.headers.authorization.replace('Bearer ', '');
       const decodedToken = await this.jwtService.verifyAsync(token, {
@@ -107,7 +108,7 @@ export class AuthenticationController {
     @Param('id') id: string, 
     @Body() updateUserDto: UpdateUserDto, 
     @UploadedFile() file: Express.Multer.File,
-  ) {
+  ): Promise<User | null> {
     try {
       updateUserDto.file = file;
       return this.authenticationService.update(id, updateUserDto); 
@@ -117,7 +118,7 @@ export class AuthenticationController {
   }
 
   @Delete('delete-user/:id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<User | null> {
     try {
       return this.authenticationService.remove(id);
     } catch (error) {

@@ -14,20 +14,21 @@ export class VerificationService {
     private verificationModel: mongoose.Model<Verification>,
   ) {}
 
-  async create(user: User, verificationCode: string) {
+  async create(user: User, verificationCode: string): Promise<Verification | null> {
     try {
-      return this.verificationModel.create({
+      const createdVerification = new this.verificationModel({
         userId: user,
         verificationCode: verificationCode,
-      });
+      })
+      return await createdVerification.save()
     } catch (error) {
       throw error;
     }
   }
 
-  findAll() {
+  async findAll(): Promise<Verification[] | null> {
     try {
-      return this.verificationModel
+      return await this.verificationModel
         .find()
         .populate('userId', '-__v')
         .select('-__v');
@@ -36,9 +37,9 @@ export class VerificationService {
     }
   }
 
-  findOne(id: string) {
+  async findOne(id: string): Promise<Verification | null> {
     try {
-      return this.verificationModel.findById(id);
+      return await this.verificationModel.findById(id);
     } catch (error) {
       throw error;
     }
@@ -46,7 +47,7 @@ export class VerificationService {
 
   async removeUserVerification(user: User) {
     try {
-      return this.verificationModel.findOneAndDelete({ userId: user._id })
+      return await this.verificationModel.findOneAndDelete({ userId: user._id })
     } catch (error) {
       throw error;
     }

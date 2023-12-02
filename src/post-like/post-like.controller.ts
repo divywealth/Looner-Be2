@@ -28,32 +28,32 @@ export class PostLikeController {
   async create(
     @Body() createPostLikeDto: CreatePostLikeDto,
     @Req() request: Request,
-  ): Promise<PostLike> {
+  ): Promise<PostLike | null> {
     try {
       const token = request.headers.authorization.replace('Bearer ', '');
       const decodedToken = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
       const userId = decodedToken.user._id;
-      return this.postLikeService.create(createPostLikeDto, userId);
+      return await this.postLikeService.create(createPostLikeDto, userId);
     } catch (error) {
       throw error.message;
     }
   }
 
   @Get('post-likes')
-  findAll() {
+  async findAll(): Promise<PostLike[] | null> {
     try {
-      return this.postLikeService.findAll();
+      return await this.postLikeService.findAll();
     } catch (error) {
       throw error.message;
     }
   }
 
   @Get('post-like/:id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<PostLike | null> {
     try {
-      return this.postLikeService.findOne(id);
+      return await this.postLikeService.findOne(id);
     } catch (error) {
       throw error.message;
     }

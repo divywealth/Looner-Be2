@@ -13,34 +13,34 @@ export class PostCommentController {
   constructor(private readonly postCommentService: PostCommentService, private jwtService: JwtService,) {}
 
   @Post('post-comment')
-  async create(@Body() createPostCommentDto: CreatePostCommentDto, @Req() request: Request,): Promise<PostComment> {
+  async create(@Body() createPostCommentDto: CreatePostCommentDto, @Req() request: Request,): Promise<PostComment | null> {
     try {
       const token = request.headers.authorization.replace('Bearer ', '');
       const decodedToken = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
       const userId = decodedToken.user._id;
-      return this.postCommentService.create(createPostCommentDto, userId);
+      return await this.postCommentService.create(createPostCommentDto, userId);
     } catch (error) {
       throw error.message
     }
   }
 
   @Get('post-comments')
-  findAll() {
+  async findAll(): Promise<PostComment[] | null> {
     try {
-      return this.postCommentService.findAll();
+      return await this.postCommentService.findAll();
     } catch (error) {
-      throw error.message
+      throw error.message;
     }
   }
 
   @Get('post-comment/:id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<PostComment | null> {
     try {
-      return this.postCommentService.findOne(id);
+      return await this.postCommentService.findOne(id);
     } catch (error) {
-      throw error.message
+      throw error.message;
     }
   }
 

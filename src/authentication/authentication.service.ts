@@ -170,7 +170,7 @@ export class AuthenticationService {
     }
   }
 
-  async updatePassword(updatePasswordDto: UpdatePassworDto, user: User) {
+  async updatePassword(updatePasswordDto: UpdatePassworDto, user: User): Promise<User | null> {
     try {
       if (
         !(await bcrypt.compare(
@@ -197,7 +197,7 @@ export class AuthenticationService {
     }
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
     try {
       const filter = {
         _id: id,
@@ -217,7 +217,7 @@ export class AuthenticationService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<User | null>{
     try {
       const filter = {
         _id: id,

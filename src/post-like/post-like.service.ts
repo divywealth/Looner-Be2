@@ -13,29 +13,29 @@ export class PostLikeService {
     private readonly postLikeModel: mongoose.Model<PostLike>
   ) {}
 
-  create(createPostLikeDto: CreatePostLikeDto, userId: string): Promise<PostLike> {
+  async create(createPostLikeDto: CreatePostLikeDto, userId: string): Promise<PostLike | null> {
     try {
       const createdPostLike = new this.postLikeModel({
         userId: userId,
         postId: createPostLikeDto.postId
       })
-      return createdPostLike.save()
+      return await createdPostLike.save()
     } catch (error) {
       throw error
     }
   }
 
-  findAll() {
+  async findAll(): Promise<PostLike[] | null> {
     try {
-      return this.postLikeModel.find()
+      return await this.postLikeModel.find()
     } catch (error) {
       throw error
     }
   }
 
-  findOne(id: string) {
+  async findOne(id: string): Promise<PostLike | null> {
     try {
-      return this.postLikeModel.findById(id);
+      return await this.postLikeModel.findById(id);
     } catch (error) {
       throw error
     }

@@ -49,17 +49,17 @@ export class PostService {
     }
   }
 
-  findAll(): Promise<Post[] | null> {
+  async findAll(): Promise<Post[] | null> {
     try {
-      return this.postModel.find().populate('images').exec()
+      return await this.postModel.find().populate({ path: 'images', model: 'Image' }).exec()
     } catch (error) {
       throw error
     }
   }
 
-  findOne(id: string): Promise<Post | null> {
+  async findOne(id: string): Promise<Post | null> {
     try {
-      return this.postModel.findById(id).populate('images').exec()
+      return await this.postModel.findById(id).populate({ path: 'images', model: 'Image' }).exec()
     } catch (error) {
       throw error
     }

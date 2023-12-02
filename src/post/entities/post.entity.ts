@@ -27,7 +27,7 @@ export class Post {
   images: Image[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'PostLike' }] })
-  postLikes: PostLike[];
+  postLikes: PostLike[]; 
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'PostComment' }] })
   postComments: PostComment[];
